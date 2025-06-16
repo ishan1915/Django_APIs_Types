@@ -11,6 +11,8 @@ router.register(r'itemsa', ItemReadOnlyViewSet ,basename='item-readonly')
 
 urlpatterns = [
     path('hello/', HelloWorld.as_view()),
+    path('s/', ItemStatsAPIView.as_view()),
+
     path('h1/',ItemCreateView.as_view()),
     path('h3/', ItemListView.as_view()),
 
@@ -19,6 +21,8 @@ urlpatterns = [
     path('h5/',ItemListCreateView.as_view()),
     path('h6/<int:pk>/',ItemDetailView.as_view()),
     path('h7/', ItemCustomView.as_view(), name='item-custom'),
+    path('h8/', simple_viewa, name='item-custom'),
+
 
 
 ]

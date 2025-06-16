@@ -7,14 +7,27 @@ from .models import Item
 from .serializers import ItemSerializer
 from rest_framework import viewsets
 from rest_framework import mixins, generics
+from rest_framework.decorators import api_view
+from django.db.models import Sum
+
 
 
 # Create your views here.
 # 1. APIView – Low-Level Base Class
+# Use to write all different types of queries for like login,signup,custom logic,calling external apis,file uploading,handle multiple model
  
 class HelloWorld(APIView):
     def get(self,request):
         return Response({"message":"Hello World"})
+
+class ItemStatsAPIView(APIView):
+    def get(self, request):
+        total_items = Item.objects.count()
+        total_price = Item.objects.aggregate(Sum('price'))['price__sum']
+        return Response({
+            'total_items': total_items,
+            'total_price': total_price
+        })
 
 
 #2.Genric Views-For a single purpose-create,update,view,delete
@@ -94,3 +107,10 @@ class ItemCustomView(mixins.CreateModelMixin, mixins.ListModelMixin, generics.Ge
 
     def post(self, request, *args, **kwargs):
         return self.create(request)
+
+
+
+#Function Based api view
+@api_view(['GET'])
+def simple_viewa(request):
+    return Response({"msg": "Hi from FBV"})
