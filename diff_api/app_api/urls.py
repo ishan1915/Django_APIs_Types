@@ -8,4 +8,7 @@ urlpatterns = [
 
     path('h2/<int:pk>/', ItemRetrieveView.as_view()),
     path('h4/<int:pk>/',ItemUpdateView.as_view()),
+    path('h5/',ItemListCreateView.as_view()),
+    path('h6/<int:pk>/',ItemDetailView.as_view()),
+
 ]

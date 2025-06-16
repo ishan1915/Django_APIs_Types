@@ -31,13 +31,25 @@ class ItemListView(generics.ListAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
 
-#UpdateAPIView ------
+#UpdateAPIView 
 class ItemUpdateView(generics.UpdateAPIView):
     queryset=Item.objects.all()
     serializer_class=ItemSerializer
 
+#DestroyAPIView
+class ItemDeleteView(generics.DestroyAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
 
 
+#3.Combo Genrics Views
+#a-ListCreateAPI View
 
+class ItemListCreateView(generics.ListCreateAPIView):
+    queryset=Item.objects.all()
+    serializer_class=ItemSerializer
 
-
+#b.-RetrieveUpdateDestroyAPIView
+class ItemDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
