@@ -110,7 +110,7 @@ class ItemCustomView(mixins.CreateModelMixin, mixins.ListModelMixin, generics.Ge
 
 
 
-#Function Based api view
+#6Function Based api view
 @api_view(['GET'])
 def simple_viewa(request):
     return Response({"msg": "Hi from FBV"})
