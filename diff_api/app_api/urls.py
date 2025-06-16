@@ -23,6 +23,10 @@ urlpatterns = [
     path('h7/', ItemCustomView.as_view(), name='item-custom'),
     path('h8/', simple_viewa, name='item-custom'),
 
+     path('', login_page, name='login_page'),
+    path('login/', login_view, name='login'),
+    path('dashboard/', dashboard_view, name='dashboard'),
+
 
 
 ]

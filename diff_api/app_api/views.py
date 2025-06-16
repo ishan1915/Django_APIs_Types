@@ -9,6 +9,11 @@ from rest_framework import viewsets
 from rest_framework import mixins, generics
 from rest_framework.decorators import api_view
 from django.db.models import Sum
+from django.contrib.auth import authenticate
+from django.shortcuts import render, redirect
+from rest_framework.authtoken.models import Token
+from rest_framework import status
+
 
 
 
@@ -114,3 +119,28 @@ class ItemCustomView(mixins.CreateModelMixin, mixins.ListModelMixin, generics.Ge
 @api_view(['GET'])
 def simple_viewa(request):
     return Response({"msg": "Hi from FBV"})
+
+
+
+@api_view(['POST'])
+def login_view(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    user = authenticate(username=username, password=password)
+
+    if user is not None:
+        token, created = Token.objects.get_or_create(user=user)
+        request.session['username'] = user.username  # store username in session
+        return redirect('dashboard')
+    else:
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+def login_page(request):
+    return render(request, 'login.html')
+
+def dashboard_view(request):
+    username = request.session.get('username')
+    if username:
+        return render(request, 'dashboard.html', {'username': username})
+    return redirect('login_page')
