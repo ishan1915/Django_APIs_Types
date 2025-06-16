@@ -5,6 +5,9 @@ from django.urls import path
 from rest_framework import generics
 from .models import Item
 from .serializers import ItemSerializer
+from rest_framework import viewsets
+from rest_framework import mixins, generics
+
 
 # Create your views here.
 # 1. APIView – Low-Level Base Class
@@ -53,3 +56,41 @@ class ItemListCreateView(generics.ListCreateAPIView):
 class ItemDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
+
+
+
+#4.Viewsets
+#a.modelViewSet-ModelViewSet, which is very powerful in Django REST Framework.
+#It automatically gives you:
+
+#List
+#Retrieve
+#Create
+#Update
+#Delete
+
+class ItemViewSet(viewsets.ModelViewSet):
+    queryset=Item.objects.all()
+    serializer_class=ItemSerializer
+
+#b. ReadOnlyModelViewSet
+#only support Get-retrieve
+
+class ItemReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+
+
+#5. Mixins + GenericAPIView (Custom Combo)
+ 
+
+
+class ItemCustomView(mixins.CreateModelMixin, mixins.ListModelMixin, generics.GenericAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request)
