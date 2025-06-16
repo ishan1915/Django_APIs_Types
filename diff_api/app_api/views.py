@@ -31,10 +31,11 @@ class ItemListView(generics.ListAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
 
-#UpdateAPIView
+#UpdateAPIView ------
 class ItemUpdateView(generics.UpdateAPIView):
     queryset=Item.objects.all()
     serializer_class=ItemSerializer
+
 
 
 
