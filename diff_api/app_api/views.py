@@ -42,6 +42,10 @@ class ItemCreateView(generics.CreateAPIView):
     serializer_class=ItemSerializer
 
 
+def item_create_form(request):
+    return render(request, 'item_create.html')  #for frontend template     
+
+
 #RetriveAPI View-retrive single item
 class ItemRetrieveView(generics.RetrieveAPIView):
     queryset=Item.objects.all()

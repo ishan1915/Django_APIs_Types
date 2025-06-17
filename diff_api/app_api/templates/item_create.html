@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Item</title>
+</head>
+<body>
+    <h2>Create Item (POST to DRF)</h2>
+    <form id="itemForm">
+        <label>Name:</label><br>
+        <input type="text" name="name" required><br><br>
+
+        <label>Price:</label><br>
+        <input type="number" name="price" step="0.01" required><br><br>
+
+        <label>Description:</label><br>
+        <textarea name="description" rows="4"></textarea><br><br>
+
+        <button type="submit">Create Item</button>
+    </form>
+
+    <p id="response"></p>
+
+    <script>
+        document.getElementById("itemForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = {
+                name: form.name.value,
+                price: form.price.value,
+                description: form.description.value
+            };
+
+            const response = await fetch("/api/h1/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+            document.getElementById("response").innerText = JSON.stringify(result);
+        });
+    </script>
+</body>
+</html>

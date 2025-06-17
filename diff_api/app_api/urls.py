@@ -14,6 +14,9 @@ urlpatterns = [
     path('s/', ItemStatsAPIView.as_view()),
 
     path('h1/',ItemCreateView.as_view()),
+    path('create-form/', item_create_form, name='item-create-form'),
+
+
     path('h3/', ItemListView.as_view()),
 
     path('h2/<int:pk>/', ItemRetrieveView.as_view()),
