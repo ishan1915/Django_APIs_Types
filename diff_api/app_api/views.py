@@ -140,9 +140,11 @@ def login_view(request):
     else:
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
+#login
 def login_page(request):
     return render(request, 'login.html')
 
+#dashboard
 def dashboard_view(request):
     username = request.session.get('username')
     if username:
