@@ -217,3 +217,86 @@ def pow_view(request):
         result=math.pow(base,exponent)
         return Response(result)
     return Response(serializers.errors)
+
+
+
+
+@api_view(['POST'])
+def sort_view(request):
+    serializers=SortSeializer(data=request.data)
+    if serializers.is_valid():
+        numbers=serializers.validated_data['numbers']
+        result=sorted(numbers)
+        return Response(result)
+    return Response(serializers.errors)
+
+
+@api_view(['POST'])
+def reverse_view(request):
+    serializers=ReverseSerializer(data=request.data)
+    if serializers.is_valid():
+        numbers=serializers.validated_data['numbers']
+        result=reversed(numbers)
+        return Response({"reversed numbers are":result})
+    return Response(serializers.errors)
+
+
+@api_view(["POST"])
+def search_view(request):
+    serializers=SearchSerializer(data=request.data)
+    if serializers.is_valid():
+        numbers=serializers.validated_data['numbers']
+        target=serializers.validated_data['target']
+        result=target in numbers
+        if result==1:   
+            return Response({"msg":"number is founded"})
+        else:
+           return Response({"msg":"number not in list"})
+
+         
+    return Response(serializers.errors)
+
+
+
+@api_view(["POST"])
+def max_view(request):
+    serializers=MaxSerializer(data=request.data)
+    if serializers.is_valid():
+        numbers=serializers.validated_data['numbers']
+        result=max(numbers)
+        return Response({"the largest number:":result})
+    return Response(serializers.errors)
+
+
+@api_view(["POST"])
+def min_view(request):
+    serializers=MinSerializer(data=request.data)
+    if serializers.is_valid():
+        numbers=serializers.validated_data['numbers']
+        result=min(numbers)
+        return Response({"thesmallestnumberis":result})
+    return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def sum_view(request):
+    serializers=SumSerializer(data=request.data)
+    if serializers.is_valid():
+        numbers=serializers.validated_data['numbers']
+        result=sum(numbers)
+        return Response(result)
+    return Response(serializers.errors)
+
+
+
+@api_view(['POST'])
+def even_view(request):
+    even_num=[]
+    serializers=Even(data=request.data)
+    if serializers.is_valid():
+        numbers=serializers.validated_data['numbers']
+        for n in numbers:
+            if n%2==0:
+                even_num.append(n)
+        return Response(even_num)
+    return Response(serializers.errors)

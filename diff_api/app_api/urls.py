@@ -38,6 +38,17 @@ urlpatterns = [
     path('fact/',fact_view,name='fact'),
     path('pow/',pow_view,name='pow'),
 
+    path('sort/',sort_view,name='sort'),
+    path('rev/',reverse_view,name='rev'),
+
+    path('search/',search_view,name='search_view'),
+
+   path('max/',max_view,name='max'),
+   path('min/',min_view,name='min'),
+
+   path('sum/',sum_view,name='sum'),
+
+   path('even/',even_view,name='even'),
 
 
 ]
