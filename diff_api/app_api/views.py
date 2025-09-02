@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.urls import path
 from rest_framework import generics
 from .models import Item
-from .serializers import ItemSerializer
+from .serializers import *
 from rest_framework import viewsets
 from rest_framework import mixins, generics
 from rest_framework.decorators import api_view
@@ -150,3 +150,26 @@ def dashboard_view(request):
     if username:
         return render(request, 'dashboard.html', {'username': username})
     return redirect('login_page')
+
+
+
+
+
+
+
+#######calculator views########################
+@api_view(['POST'])
+def add_view(request):
+    serializers=AddSerializer(data=request.data)
+    if serializers.is_valid():
+        return Response({"result":serializers.validated_data['num1']+serializers.validated_data['num2']})
+    return Response(serializers.errors)
+
+
+@api_view(['POST'])
+def sub_view(request):
+    serializers=SubSerializer(data=request.data)
+    if serializers.is_valid():
+        result=serializers.validated_data['num1']-serializers.validated_data['num2']
+        return Response(result)
+    return Response(serializers.errors)

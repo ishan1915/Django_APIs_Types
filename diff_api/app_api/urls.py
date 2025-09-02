@@ -31,6 +31,10 @@ urlpatterns = [
     path('dashboard/', dashboard_view, name='dashboard'),
 
 
+    path('add/',add_view,name='add'),
+    path('sub/',sub_view,name='sub'),
+
+
 
 ]
 urlpatterns += router.urls
