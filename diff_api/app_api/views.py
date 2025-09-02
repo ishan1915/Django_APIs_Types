@@ -13,6 +13,7 @@ from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from rest_framework.authtoken.models import Token
 from rest_framework import status
+import math
 
 
 
@@ -171,5 +172,48 @@ def sub_view(request):
     serializers=SubSerializer(data=request.data)
     if serializers.is_valid():
         result=serializers.validated_data['num1']-serializers.validated_data['num2']
+        return Response(result)
+    return Response(serializers.errors)
+
+
+@api_view(['POST'])
+def mul_view(request):
+    serializers=MulSerializer(data=request.data)
+    if serializers.is_valid():
+        result=serializers.validated_data['num1']*serializers.validated_data['num2']
+        return Response(result)
+    return Response(serializers.errors)
+
+
+
+@api_view(["POST"])
+def div_view(request):
+    serializers=DivSerializer(data=request.data)
+    if serializers.is_valid():
+        result=serializers.validated_data['num1']/serializers.validated_data['num2']
+        return Response(result)
+    return Response(serializers.errors)
+
+
+
+@api_view(['POST'])
+def fact_view(request):
+    serializers=FactorialSerializer(data=request.data)
+    if serializers.is_valid():
+        num=serializers.validated_data['num']
+        result=math.factorial(num)
+        return Response(result)
+    return Response(serializers.errors)
+
+
+
+
+@api_view(['POST'])
+def pow_view(request):
+    serializers=PowSerializer(data=request.data)
+    if serializers.is_valid():
+        base=serializers.validated_data['base']
+        exponent=serializers.validated_data['exponent']
+        result=math.pow(base,exponent)
         return Response(result)
     return Response(serializers.errors)

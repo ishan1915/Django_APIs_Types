@@ -24,4 +24,20 @@ class MulSerializer(serializers.Serializer):
     num1=serializers.FloatField()
     num2=serializers.FloatField()
 
+class DivSerializer(serializers.Serializer):
+    num1=serializers.FloatField()
+    num2=serializers.FloatField()
+
+
+
+
+class FactorialSerializer(serializers.Serializer):
+    num=serializers.IntegerField()
+
+
+class PowSerializer(serializers.Serializer):
+    base=serializers.IntegerField()
+    exponent=serializers.IntegerField()
+
     
+

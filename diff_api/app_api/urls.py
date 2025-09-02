@@ -33,6 +33,10 @@ urlpatterns = [
 
     path('add/',add_view,name='add'),
     path('sub/',sub_view,name='sub'),
+    path('mul/',mul_view,name='mul'),
+    path('div/',div_view,name='div'),
+    path('fact/',fact_view,name='fact'),
+    path('pow/',pow_view,name='pow'),
 
 
 
