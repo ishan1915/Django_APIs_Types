@@ -11,7 +11,7 @@ class Classroom(models.Model):
 
 class Student(models.Model):
     name=models.CharField(max_length=20)
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
     classroom=models.ForeignKey(Classroom,on_delete=models.CASCADE)
     phone=models.CharField(max_length=10,null=True)
     email=models.EmailField(null=True)
@@ -23,5 +23,19 @@ class Student(models.Model):
 
 
 
+class Teacher(models.Model):
+    name=models.CharField(max_length=20)
+    user=models.OneToOneField(User,on_delete=models.CASCADE) 
+    phone=models.CharField(max_length=10,null=True)
+    email=models.EmailField(null=True)
+    address=models.TextField(null=True)
+
+    def __str__(self):
+        return f"{self.name}"
 
 
+class Subject(models.Model):
+    name=models.CharField(max_length=100)
+    teacher=models.ForeignKey(Teacher,on_delete=models.CASCADE)
+    student=models.ManyToManyField(Student)
+    classroom=models.ForeignKey(Classroom,on_delete=models.CASCADE)

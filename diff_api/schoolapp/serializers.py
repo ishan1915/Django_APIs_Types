@@ -25,3 +25,10 @@ class SignupSerializer(serializers.ModelSerializer):
         validate_data.pop('confirm_password')
         user=User.objects.create_user(**validate_data)
         return user
+    
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Student
+        fields='__all__'

@@ -31,3 +31,46 @@ def signup_view(request):
             status=status.HTTP_201_CREATED
         )
     return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+@api_view(["GET","POST"])
+def student_get_post(request):
+    if request.method=="GET":
+        student=Student.objects.all()
+        serializers=StudentSerializer(student,many=True)
+        return Response(serializers.data,status=status.HTTP_200_OK)
+    
+    elif request.method=="POST":
+        serializers=StudentSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data,status=status.HTTP_201_CREATED)
+        return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+@api_view(['GET','PUT','DELETE'])
+def student_details(request,id):
+    if request.method=='GET':
+        student=Student.objects.get(id=id)
+        serializers=StudentSerializer(student)
+        return Response(serializers.data)
+    
+    elif request.method=='PUT':
+        student=Student.objects.get(id=id)
+        serializers=StudentSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+        return Response(serializers.errors)
+    
+
+    elif request.method=="DELETE":
+        student=Student.objects.get(id=id)
+        student.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+
