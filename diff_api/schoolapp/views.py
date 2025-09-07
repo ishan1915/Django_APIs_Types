@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import *
@@ -60,7 +60,7 @@ def student_details(request,id):
     
     elif request.method=='PUT':
         student=Student.objects.get(id=id)
-        serializers=StudentSerializer(data=request.data)
+        serializers=StudentSerializer(student,data=request.data)
         if serializers.is_valid():
             serializers.save()
             return Response(serializers.data,status=status.HTTP_202_ACCEPTED)
@@ -119,3 +119,98 @@ def subject_detail(request):
     subject=Subject.objects.all()
     serializers=GetSubject(subject,many=True)
     return Response(serializers.data)
+
+
+
+###student updating their student record
+@api_view(['PATCH'])
+def student_selfupdate(request,id):
+    
+    student=Student.objects.get(id=id)
+     
+    serializers=StudentUpdate(student,data=request.data,partial=True)
+    if serializers.is_valid():
+        serializers.save()
+        return Response(serializers.data)
+    return Response(serializers.errors)
+
+
+###teacher updating detail
+@api_view(['PATCH','PUT'])
+def teacher_update(request,id):
+    try:
+        teacher=Teacher.objects.get(id=id)
+    except Teacher.DoesNotExist:
+        return Response({"error":"Teacher does not exist"},status=status.HTTP_404_NOT_FOUND)
+    
+    user=request.user
+    data=request.data.copy()
+    data['user']=user.id
+    serializers=TeacherSerializer(teacher,data=data)
+    if serializers.is_valid():
+        serializers.save()
+        return Response(serializers.data)
+    return Response(serializers.errors)
+
+
+###student able to see his teacher details
+@api_view(['GET'])
+def student_teacher(request):
+    student=Student.objects.get(user=request.user)
+    teacher=Teacher.objects.filter(subject__student=student)
+    serializers=TeacherSerializer(teacher,many=True)
+    return Response(serializers.data)
+
+
+###teacher will able to see the students registered under him 
+@api_view(['GET'])
+def teacher_student(request):
+    teacher=get_object_or_404(Teacher,user=request.user)
+    student=Student.objects.filter(subject__teacher=teacher)
+    serializers=StudentSerializer(student,many=True)
+    return Response(serializers.data)
+
+
+###crud operation on Teacher by admin
+@api_view(["GET","POST"])
+def Teacher_Details(request):
+    if request.method=="GET":
+        teacher=Teacher.objects.all()
+        serializers=TeacherSerializer(teacher,many=True)
+        return Response(serializers.data,status=status.HTTP_200_OK)
+    
+    elif request.method=="POST":
+        serializers=TeacherSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data,status=status.HTTP_201_CREATED)
+        return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+
+@api_view(['GET','PUT','DELETE'])
+def teachers(request,id):
+    try:
+        teacher=Teacher.objects.get(id=id)
+    except Teacher.DoesNotExist:
+        return Response({"error":"teacher not found"})
+    
+
+    if request.method=="GET":
+        serializers=TeacherSerializer(teacher)
+        return Response(serializers.data,status=status.HTTP_200_OK)
+    
+    elif request.method=="PUT":
+        serializers=TeacherSerializer(teacher,data=request.data,partial=True)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data,status=status.HTTP_201_CREATED)
+        return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+
+    elif request.method=="DELETE":
+        teacher.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+

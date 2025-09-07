@@ -72,3 +72,11 @@ class GetSubject(serializers.ModelSerializer):
     class Meta:
         model=Subject
         fields=['id','name','teacher','student','classroom']
+
+
+
+ 
+class StudentUpdate(serializers.ModelSerializer):
+    class Meta:
+        model=Student
+        fields=['name','phone','email','address']
