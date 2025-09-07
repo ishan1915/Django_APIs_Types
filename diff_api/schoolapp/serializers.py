@@ -32,3 +32,43 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model=Student
         fields='__all__'
+
+
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Teacher
+        fields='__all__'
+
+
+ ###nested reverse relationship getting classrooms  with all  their students details
+
+class StudentMiniSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ["id", "name"]
+
+class ClassroomNestedSerializer(serializers.ModelSerializer):
+    students=StudentMiniSerializer(many=True,read_only=True)
+
+    class Meta:
+        model=Classroom
+        fields=['id','name','students']
+
+
+####get student detail with classroom name
+class StudentwithClassRoom(serializers.ModelSerializer):
+    classroom=serializers.CharField(source="classroom.name",read_only=True)
+
+    class Meta:
+        model=Student
+        fields=["id","name","classroom"]
+
+
+###get all subjects with their teacher and students
+class GetSubject(serializers.ModelSerializer):
+    student=StudentSerializer(many=True,read_only=True)
+    teacher=TeacherSerializer( read_only=True)
+
+    class Meta:
+        model=Subject
+        fields=['id','name','teacher','student','classroom']

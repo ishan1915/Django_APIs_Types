@@ -34,7 +34,7 @@ def signup_view(request):
 
 
 
-
+#for admin to get ,create,edit,delete student details
 @api_view(["GET","POST"])
 def student_get_post(request):
     if request.method=="GET":
@@ -63,7 +63,7 @@ def student_details(request,id):
         serializers=StudentSerializer(data=request.data)
         if serializers.is_valid():
             serializers.save()
-            return Response(serializers.data)
+            return Response(serializers.data,status=status.HTTP_202_ACCEPTED)
         return Response(serializers.errors)
     
 
@@ -73,4 +73,49 @@ def student_details(request,id):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
+#students for registering for subject
 
+
+@api_view(['POST','GET'])
+def register_subject(request,id):
+    try:
+       subject=Subject.objects.get(id=id)
+    except Subject.DoesNotExist():
+        return Response({"error":"subject not exist"},status=status.HTTP_404_NOT_FOUND)
+    
+    user=request.user
+    student=Student.objects.get(user=user)
+    
+    if subject.student.filter(id=student.id).exists():
+        return Response({"msg": f"{student.user.username} is already registered for {subject.name}"},
+                        status=status.HTTP_200_OK)
+     
+    subject.student.add(student)
+    return Response({"msg":f"{student.user.username} registered for {subject.name}"})
+
+
+#getting all classroom with their students
+
+@api_view(["GET"])
+def classroom_detail(request):
+    classrooms = Classroom.objects.all()
+    serializer = ClassroomNestedSerializer(classrooms, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+#getting student with their classroom
+
+@api_view(['GET'])
+def student_with_classroom(request):
+    students=Student.objects.all()
+    serializers=StudentwithClassRoom(students,many=True)
+    return Response(serializers.data)
+
+
+
+#getting all subjects with their student and teacher details
+@api_view(['GET'])
+def subject_detail(request):
+    subject=Subject.objects.all()
+    serializers=GetSubject(subject,many=True)
+    return Response(serializers.data)

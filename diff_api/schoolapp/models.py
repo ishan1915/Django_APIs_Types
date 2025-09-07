@@ -12,7 +12,7 @@ class Classroom(models.Model):
 class Student(models.Model):
     name=models.CharField(max_length=20)
     user=models.OneToOneField(User,on_delete=models.CASCADE)
-    classroom=models.ForeignKey(Classroom,on_delete=models.CASCADE)
+    classroom=models.ForeignKey(Classroom,on_delete=models.CASCADE,related_name="students")
     phone=models.CharField(max_length=10,null=True)
     email=models.EmailField(null=True)
     address=models.TextField(null=True)
