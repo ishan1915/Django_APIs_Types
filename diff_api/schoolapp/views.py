@@ -272,3 +272,33 @@ def teacher_create_tt(request):
             },
             status=status.HTTP_201_CREATED,
         )
+
+### get timetable by subjectwise
+@api_view(["GET"])
+def tt_by_sub(request,id):
+    subject=Subject.objects.get(id=id)
+    tt=TimeTable.objects.filter(subject=subject)
+    serializers=TimeTableReadSerializers(tt,many=True)
+    return Response(serializers.data,status=status.HTTP_200_OK)
+
+###get timetable by time-at a given time
+@api_view(['POST'])
+def tt_by_time(request):
+    search=request.data.get('time','')
+    tt=TimeTable.objects.filter(time__icontains=search)
+    serializers=TimeTableReadSerializers(tt,many=True)
+    return Response(serializers.data)
+
+
+
+###get timetable by time-at a given day
+@api_view(['POST'])
+def tt_by_timeandday(request):
+    search=request.data.get('time','')
+    search1=request.data.get('days','')
+    tt=TimeTable.objects.filter(time__icontains=search,days__icontains=search1)
+    serializers=TimeTableReadSerializers(tt,many=True)
+    return Response(serializers.data)
+
+
+

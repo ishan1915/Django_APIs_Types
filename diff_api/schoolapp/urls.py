@@ -34,4 +34,11 @@ urlpatterns = [
     path('tt/',get_timetable,name='tt'),
 
     path('tttt/',teacher_create_tt,name='tttt'),
+
+    path('ttbs/<int:id>/',tt_by_sub,name='ttbs'),
+
+    path('ttbt/',tt_by_time,name='ttbt'),
+
+
+    path('ttbtd/',tt_by_timeandday,name='tttbtd'),
 ]
