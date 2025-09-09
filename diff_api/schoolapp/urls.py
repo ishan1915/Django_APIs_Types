@@ -26,5 +26,12 @@ urlpatterns = [
 
     path('teacher/',Teacher_Details,name='teacher'),
 
-    path('teachers/<int:id>/',teachers,name='teachers')
+    path('teachers/<int:id>/',teachers,name='teachers'),
+
+    path('search/',search_subject,name='search'),
+    path('create_tt/',create_timetable,name='create_tt'),
+
+    path('tt/',get_timetable,name='tt'),
+
+    path('tttt/',teacher_create_tt,name='tttt'),
 ]

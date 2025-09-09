@@ -80,3 +80,35 @@ class StudentUpdate(serializers.ModelSerializer):
     class Meta:
         model=Student
         fields=['name','phone','email','address']
+
+
+
+class TimeTableReadSerializers(serializers.ModelSerializer):
+    classroom=serializers.CharField(source='classroom.name',read_only=True) #for reading only
+    subject=serializers.CharField(source='subject.name',read_only=True)
+    teacher=serializers.CharField(source='teacher.name',read_only=True)
+    class Meta:
+        model=TimeTable
+        fields=['subject', 'classroom', 'teacher' ,'days','time']
+
+
+
+
+class TimeTableWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TimeTable
+        fields="__all__"
+
+
+    def validate(self, attrs):
+        teacher = attrs.get("teacher")
+        day = attrs.get("days")
+        time = attrs.get("time")
+
+        # check if teacher already has a class at same day+time
+        if TimeTable.objects.filter(teacher=teacher, days=day, time=time).exists():
+            raise serializers.ValidationError(
+                {"error": f"{teacher.name} already has a class on {day} at {time}"}
+            )
+
+        return attrs

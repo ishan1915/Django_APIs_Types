@@ -213,4 +213,62 @@ def teachers(request,id):
 
 
 
+@api_view(["POST"])
+def search_subject(request):
+    search=request.data.get('search','')
+    subject=Subject.objects.filter(name__icontains=search)
+    serializers=GetSubject(subject,many=True)
+    return Response(serializers.data)
 
+
+
+
+
+@api_view(['POST'])
+def create_timetable(request):
+    serializers=TimeTableWriteSerializer(data=request.data)
+    if serializers.is_valid():
+        serializers.save()
+        return Response(serializers.data)
+    return Response(serializers.errors)
+
+
+@api_view(['GET'])
+def get_timetable(request):
+    tt=TimeTable.objects.all()
+    serializers=TimeTableReadSerializers(tt,many=True)
+    return Response(serializers.data,status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def teacher_create_tt(request):
+    teacher=Teacher.objects.get(user=request.user)
+    data=request.data.copy()
+    data['teacher']=teacher.id
+    subject_id=request.data.get('subject_id')
+    classroom_id=request.data.get('classroom_id')
+    days=request.data.get('days')
+    time=request.data.get('time')
+
+
+    subject = get_object_or_404(Subject, id=subject_id)
+    classroom = get_object_or_404(Classroom, id=classroom_id)
+
+    timetable=TimeTable.objects.create(
+        teacher=teacher,
+        classroom=classroom,
+        subject=subject,
+        days=days,
+        time=time
+    )
+    return Response(
+            {
+                "id": timetable.id,
+                "subject": subject.name,
+                "classroom": classroom.name,
+                "teacher": teacher.name,
+                "days": days,
+                "time": time,
+            },
+            status=status.HTTP_201_CREATED,
+        )
