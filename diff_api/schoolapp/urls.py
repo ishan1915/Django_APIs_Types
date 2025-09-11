@@ -41,4 +41,16 @@ urlpatterns = [
 
 
     path('ttbtd/',tt_by_timeandday,name='tttbtd'),
+    path('tt_get/',tt_get,name='tt_get'),
+
+    path('exam/',create_getexam,name='exam'),
+
+
+    path('exams/<int:id>/',get_update_delexam,name='exams'),
+    path('stud_exam/',student_exam,name='stude'),
+
+    path('exam_s/',exam_search,name='exams'),
+
+    path('examss/',exam_search2,name='examss'),
+    path('countt/',sub_countTT,name='countt'),
 ]

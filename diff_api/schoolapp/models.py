@@ -74,3 +74,15 @@ class TimeTable(models.Model):
 
     def __str__(self):
         return f"{self.subject}-{self.classroom}-{self.days}-{self.time}"
+    
+
+
+class Exam(models.Model):
+    subject=models.ForeignKey(Subject,on_delete=models.CASCADE)
+    name=models.CharField(max_length=20)
+    date=models.CharField(max_length=20)
+
+
+
+    def __str__(self):
+        return f"{self.name}-{self.subject}-{self.date}"

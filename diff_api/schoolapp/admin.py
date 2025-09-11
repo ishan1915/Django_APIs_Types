@@ -7,4 +7,4 @@ admin.site.register(Student)
 admin.site.register(Teacher)
 admin.site.register(Subject)
 admin.site.register(TimeTable)
-
+admin.site.register(Exam)

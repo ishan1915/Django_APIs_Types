@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .serializers import *
 from django.contrib.auth import authenticate,login,logout
 from rest_framework import status
+from django.db.models import Count
 # Create your views here.
 
 @api_view(['POST'])
@@ -302,3 +303,89 @@ def tt_by_timeandday(request):
 
 
 
+@api_view(['GET','POST'])
+def create_getexam(request):
+    if request.method=='GET':
+        exam=Exam.objects.all()
+        serializers=ExamSerializer(exam,many=True)
+        return Response(serializers.data,status=status.HTTP_200_OK)
+    
+    elif request.method=="POST":
+        serializers=ExamSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+        return Response(serializers.errors)
+    
+
+
+@api_view(['GET','PUT','DELETE'])
+def get_update_delexam(request,id):
+    try:
+        exam=Exam.objects.get(id=id)
+    except Exam.DoesNotExist:
+        return Response({"error":"Exam with this id NOT FOUND!"})
+    
+    if request.method=='GET':
+        serializers=ExamSerializer(exam)
+        return Response(serializers.data)
+    
+
+    if request.method=='PUT':
+        serializers=ExamSerializer(exam,data=request.data,partial=True)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data,status=status.HTTP_200_OK)
+        return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+
+    if request.method=="DELETE":
+        exam.delete()
+        return Response({"msg":"Exam Deleted"},status=status.HTTP_204_NO_CONTENT)
+    
+
+
+
+###student able to see his exam
+@api_view(['GET'])
+def student_exam(request):
+    student=Student.objects.get(user=request.user)
+     
+    exam=Exam.objects.filter(subject__student=student)
+    serializers=ExamSerializer(exam,many=True)
+    return Response(serializers.data)
+
+
+@api_view(['GET','POST'])
+def exam_search(request):
+    search=request.data.get('search','')
+    exam=Exam.objects.filter(name__icontains=search)
+    serializers=ExamSerializer(exam,many=True)
+    return Response(serializers.data)
+
+
+@api_view(['GET','POST'])
+def exam_search2(request):
+    search=request.data.get('search','')
+    subject=Subject.objects.filter(name__icontains=search)
+    exam=Exam.objects.filter(subject__in=subject)     ###multiple subjects use subject__in=subject instead of subject=subject
+    serializers=ExamSerializer(exam,many=True)
+    return Response(serializers.data)
+
+####instead of  subject=Subject.objects.filter(name__icontains=search)
+  ###           exam=Exam.objects.filter(subject__in=subject) 
+  ## we can use exam=Exam.objects.filter(subject_name_icontains=search)  a join query
+
+
+@api_view(['GET'])
+def tt_get(request):
+    tt=TimeTable.objects.select_related('subject','classroom').get(id=2)
+    serializers=TTSerializer(tt)
+    return Response(serializers.data)
+
+
+
+@api_view(['GET'])
+def sub_countTT(request):
+    count = TimeTable.objects.values("subject").distinct().count()
+    return Response({"unique_subjects": count})

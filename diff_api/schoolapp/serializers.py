@@ -112,3 +112,14 @@ class TimeTableWriteSerializer(serializers.ModelSerializer):
             )
 
         return attrs
+    
+
+class TTSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TimeTable
+        fields="__all__"
+
+class ExamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Exam
+        fields="__all__"
